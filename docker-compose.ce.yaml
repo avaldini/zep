@@ -21,6 +21,38 @@ services:
         condition: service_healthy
       db:
         condition: service_healthy
+    container_name: zep-j8occgocw4gckc4o40w8c08g-200718986968
+    restart: unless-stopped
+    labels:
+      - coolify.managed=true
+      - coolify.version=4.0.0-beta.420.1
+      - coolify.applicationId=2
+      - coolify.type=application
+      - coolify.name=zep-j8occgocw4gckc4o40w8c08g-200718986968
+      - coolify.resourceName=avaldinizepmain-j8occgocw4gckc4o40w8c08g
+      - coolify.projectName=nativis
+      - coolify.serviceName=avaldinizepmain-j8occgocw4gckc4o40w8c08g
+      - coolify.environmentName=production
+      - coolify.pullRequestId=0
+      - traefik.enable=true
+      - traefik.http.middlewares.gzip.compress=true
+      - traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https
+      - traefik.http.routers.http-0-j8occgocw4gckc4o40w8c08g-zep.entryPoints=http
+      - traefik.http.routers.http-0-j8occgocw4gckc4o40w8c08g-zep.middlewares=redirect-to-https
+      - 'traefik.http.routers.http-0-j8occgocw4gckc4o40w8c08g-zep.rule=Host(`yg4w4wsk4gkgckksc0kksko8.nativis.la-agencia.ai`) && PathPrefix(`/`)'
+      - traefik.http.routers.https-0-j8occgocw4gckc4o40w8c08g-zep.entryPoints=https
+      - traefik.http.routers.https-0-j8occgocw4gckc4o40w8c08g-zep.middlewares=gzip
+      - 'traefik.http.routers.https-0-j8occgocw4gckc4o40w8c08g-zep.rule=Host(`yg4w4wsk4gkgckksc0kksko8.nativis.la-agencia.ai`) && PathPrefix(`/`)'
+      - traefik.http.routers.https-0-j8occgocw4gckc4o40w8c08g-zep.tls.certresolver=letsencrypt
+      - traefik.http.routers.https-0-j8occgocw4gckc4o40w8c08g-zep.tls=true
+      - traefik.http.services.zep.loadbalancer.server.port=8001
+      - 'caddy_0.encode=zstd gzip'
+      - 'caddy_0.handle_path.0_reverse_proxy={{upstreams}}'
+      - 'caddy_0.handle_path=/*'
+      - caddy_0.header=-Server
+      - 'caddy_0.try_files={path} /index.html /index.php'
+      - 'caddy_0=https://yg4w4wsk4gkgckksc0kksko8.nativis.la-agencia.ai'
+      - caddy_ingress_network=j8occgocw4gckc4o40w8c08g
   db:
     image: ankane/pgvector:v0.5.1
     container_name: zep-ce-postgres
