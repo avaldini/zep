@@ -40,11 +40,14 @@ services:
       - traefik.http.routers.http-0-j8occgocw4gckc4o40w8c08g-zep.entryPoints=http
       - traefik.http.routers.http-0-j8occgocw4gckc4o40w8c08g-zep.middlewares=redirect-to-https
       - 'traefik.http.routers.http-0-j8occgocw4gckc4o40w8c08g-zep.rule=Host(`yg4w4wsk4gkgckksc0kksko8.nativis.la-agencia.ai`) && PathPrefix(`/`)'
+      - traefik.http.routers.http-0-j8occgocw4gckc4o40w8c08g-zep.service=zep
       - traefik.http.routers.https-0-j8occgocw4gckc4o40w8c08g-zep.entryPoints=https
       - traefik.http.routers.https-0-j8occgocw4gckc4o40w8c08g-zep.middlewares=gzip
       - 'traefik.http.routers.https-0-j8occgocw4gckc4o40w8c08g-zep.rule=Host(`yg4w4wsk4gkgckksc0kksko8.nativis.la-agencia.ai`) && PathPrefix(`/`)'
       - traefik.http.routers.https-0-j8occgocw4gckc4o40w8c08g-zep.tls.certresolver=letsencrypt
       - traefik.http.routers.https-0-j8occgocw4gckc4o40w8c08g-zep.tls=true
+      - traefik.http.routers.https-0-j8occgocw4gckc4o40w8c08g-zep.service=zep
+    
       - traefik.http.services.zep.loadbalancer.server.port=8001
       - 'caddy_0.encode=zstd gzip'
       - 'caddy_0.handle_path.0_reverse_proxy={{upstreams}}'
