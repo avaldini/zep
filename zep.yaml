@@ -8,13 +8,13 @@ http:
   # Host to bind to. Default is 0.0.0.0
   host: 0.0.0.0
   # Port to bind to. Default is 8000
-  port: 8000
+  port: 8001
   max_request_size: 5242880
 postgres:
   user: postgres
   password: postgres
   host: db
-  port: 5432
+  port: 5433
   database: postgres
   schema_name: public
   read_timeout: 30
