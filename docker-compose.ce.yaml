@@ -64,6 +64,7 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
+    command: postgres -p 5433
     networks:
       - zep-network
     healthcheck:
