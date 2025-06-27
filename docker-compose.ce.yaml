@@ -68,7 +68,7 @@ services:
     networks:
       - zep-network
     healthcheck:
-      test: ["CMD", "pg_isready", "-q", "-d", "postgres", "-U", "postgres"]
+      test: ["CMD-SHELL", "echo > /dev/tcp/localhost/5433"]
       interval: 5s
       timeout: 5s
       retries: 5
