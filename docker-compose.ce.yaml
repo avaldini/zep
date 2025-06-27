@@ -52,7 +52,7 @@ services:
       - caddy_ingress_network=j8occgocw4gckc4o40w8c08g
 
   db:
-    image: postgres:15
+    image: ankane/pgvector:pg15
     container_name: zep-ce-postgres
     restart: on-failure
     shm_size: "128mb"
