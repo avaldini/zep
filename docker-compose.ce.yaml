@@ -9,9 +9,11 @@ services:
     ports:
       - "8001:8001"
     volumes:
-      - ./zep.yaml:/app/zep.yaml
+      #- ./zep.yaml:/app/zep.yaml
+      - '/data/coolify/applications/j8occgocw4gckc4o40w8c08g/zep.yaml:/app/config/zep.yaml'
     environment:
-      - ZEP_CONFIG_FILE=/zep.yaml
+      #- ZEP_CONFIG_FILE=/zep.yaml
+      ZEP_CONFIG_FILE: /app/config/zep.yaml
     networks:
       - zep-network
     depends_on:
