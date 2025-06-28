@@ -41,3 +41,10 @@ telemetry:
   # Please provide an identifying name for your organization so can get a better understanding
   # about who is using Zep. This is optional.
   organization_name:
+message_store:
+  type: postgres
+
+api:
+  enabled: true
+  chat_history:
+    enabled: true
