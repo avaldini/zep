@@ -1,0 +1,130 @@
+name: zep-ce
+
+services:
+  zep:
+    image: zepai/zep:latest
+    ports:
+      - "8001:8001"
+    volumes:
+      - '/data/coolify/applications/j8occgocw4gckc4o40w8c08g/zep.yaml:/app/config/zep.yaml'
+    environment:
+      - ZEP_CONFIG_FILE=/app/config/zep.yaml
+    networks:
+      - zep-network
+    depends_on:
+      graphiti:
+        condition: service_healthy
+      db:
+        condition: service_healthy
+    container_name: zep-j8occgocw4gckc4o40w8c08g-200718986968
+    restart: unless-stopped
+    labels:
+      - coolify.managed=true
+      - coolify.version=4.0.0-beta.420.1
+      - coolify.applicationId=2
+      - coolify.type=application
+      - coolify.name=zep-j8occgocw4gckc4o40w8c08g-200718986968
+      - coolify.resourceName=avaldinizepmain-j8occgocw4gckc4o40w8c08g
+      - coolify.projectName=nativis
+      - coolify.serviceName=avaldinizepmain-j8occgocw4gckc4o40w8c08g
+      - coolify.environmentName=production
+      - coolify.pullRequestId=0
+      - traefik.enable=true
+      - traefik.http.middlewares.gzip.compress=true
+      - traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https
+      - traefik.http.routers.http-0-j8occgocw4gckc4o40w8c08g-zep.entryPoints=http
+      - traefik.http.routers.http-0-j8occgocw4gckc4o40w8c08g-zep.middlewares=redirect-to-https
+      - 'traefik.http.routers.http-0-j8occgocw4gckc4o40w8c08g-zep.rule=Host(`yg4w4wsk4gkgckksc0kksko8.nativis.la-agencia.ai`) && PathPrefix(`/`)'
+      - traefik.http.routers.http-0-j8occgocw4gckc4o40w8c08g-zep.service=zep
+      - traefik.http.routers.https-0-j8occgocw4gckc4o40w8c08g-zep.entryPoints=https
+      - traefik.http.routers.https-0-j8occgocw4gckc4o40w8c08g-zep.middlewares=gzip
+      - 'traefik.http.routers.https-0-j8occgocw4gckc4o40w8c08g-zep.rule=Host(`yg4w4wsk4gkgckksc0kksko8.nativis.la-agencia.ai`) && PathPrefix(`/`)'
+      - traefik.http.routers.https-0-j8occgocw4gckc4o40w8c08g-zep.tls.certresolver=letsencrypt
+      - traefik.http.routers.https-0-j8occgocw4gckc4o40w8c08g-zep.tls=true
+      - traefik.http.routers.https-0-j8occgocw4gckc4o40w8c08g-zep.service=zep
+      - traefik.http.services.zep.loadbalancer.server.port=8001
+      - 'caddy_0.encode=zstd gzip'
+      - 'caddy_0.handle_path.0_reverse_proxy={{upstreams}}'
+      - 'caddy_0.handle_path=/*'
+      - caddy_0.header=-Server
+      - 'caddy_0.try_files={path} /index.html /index.php'
+      - 'caddy_0=https://yg4w4wsk4gkgckksc0kksko8.nativis.la-agencia.ai'
+      - caddy_ingress_network=j8occgocw4gckc4o40w8c08g
+
+  db:
+    image: pgvector/pgvector:0.6.2-pg15
+    container_name: zep-ce-postgres
+    restart: on-failure
+    shm_size: "128mb"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    command: postgres -c port=5433
+    ports:
+      - "5433:5433"
+    volumes:
+      - zep-db:/var/lib/postgresql/data
+    networks:
+      - zep-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -h localhost -p 5433"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  graphiti:
+    image: zepai/graphiti:0.3
+    ports:
+      - "8003:8003"
+    env_file:
+      - .env
+    networks:
+      - zep-network
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://localhost:8003/healthcheck')",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    depends_on:
+      neo4j:
+        condition: service_healthy
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - MODEL_NAME=gpt-4o-mini
+      - NEO4J_URI=bolt://neo4j:7687
+      - NEO4J_USER=neo4j
+      - NEO4J_PASSWORD=zepzepzep
+      - PORT=8003
+
+  neo4j:
+    image: neo4j:5.22.0
+    networks:
+      - zep-network
+    healthcheck:
+      test: wget http://localhost:7687 || exit 1
+      interval: 1s
+      timeout: 10s
+      retries: 20
+      start_period: 3s
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - neo4j_data:/data
+    environment:
+      - NEO4J_AUTH=neo4j/zepzepzep
+
+volumes:
+  neo4j_data:
+  zep-db:
+
+networks:
+  zep-network:
+    driver: bridge
