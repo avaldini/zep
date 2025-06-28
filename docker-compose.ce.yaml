@@ -52,7 +52,7 @@ services:
       - caddy_ingress_network=j8occgocw4gckc4o40w8c08g
 
   db:
-    image: pgvector/pgvector:0.6.2-pg15
+    image: ankane/pgvector
     container_name: zep-ce-postgres
     restart: on-failure
     shm_size: "128mb"
@@ -72,7 +72,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-
   graphiti:
     image: zepai/graphiti:0.3
     ports:
@@ -108,7 +107,7 @@ services:
     networks:
       - zep-network
     healthcheck:
-      test: wget http://localhost:7687 || exit 1
+      test: ["CMD-SHELL", "wget -qO- http://localhost:7687 || exit 1"]
       interval: 1s
       timeout: 10s
       retries: 20
