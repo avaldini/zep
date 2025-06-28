@@ -60,7 +60,7 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=postgres
-    command: postgres -c port=5433 -c shared_preload_libraries=pgvector
+    command: postgres -c port=5433
     ports:
       - "5433:5433"
     volumes:
